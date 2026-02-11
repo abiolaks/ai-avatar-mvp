@@ -1,0 +1,13 @@
+sounddevice
+numpy
+scipy
+faster-whisper
+ollama
+pyttsx3
+opencv-python
+torch
+torchaudio
+torchvision
+ffmpeg-python
+requests
+moviepy
