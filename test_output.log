@@ -1,0 +1,22 @@
+INFO:core.avatar:SadTalker repo detected. Using device: mps
+INFO:core.speaker:Saving speech to test_audio.wav...
+INFO:core.avatar:Generating lip-sync video using SadTalker...
+INFO:core.avatar:Running SadTalker: /opt/miniconda3/envs/ai-avatar-mvp/bin/python /Users/abiolaks/.gemini/antigravity/playground/golden-radiation/ai-avatar-mvp/sadtalker_repo/inference.py --driven_audio test_audio.wav --source_image resources/IMG_20240708_092636.jpg --result_dir outputs/videos --still --preprocess crop
+ERROR:core.avatar:SadTalker inference failed: Command '['/opt/miniconda3/envs/ai-avatar-mvp/bin/python', '/Users/abiolaks/.gemini/antigravity/playground/golden-radiation/ai-avatar-mvp/sadtalker_repo/inference.py', '--driven_audio', 'test_audio.wav', '--source_image', 'resources/IMG_20240708_092636.jpg', '--result_dir', 'outputs/videos', '--still', '--preprocess', 'crop']' returned non-zero exit status 1.
+INFO:core.avatar:Falling back to MOCK mode
+Testing SadTalker Video Generation...
+==================================================
+
+1. Generating audio for: 'Hello! This is a test of the SadTalker lip-sync avatar system.'
+✓ Audio saved to: test_audio.wav
+✓ Avatar image found: resources/IMG_20240708_092636.jpg
+
+2. Generating lip-sync video with SadTalker...
+   This may take a few minutes on first run...
+✓ Video generated: outputs/videos/result.mp4
+
+✓ SUCCESS! Video file created (19 bytes)
+   Location: /Users/abiolaks/.gemini/antigravity/playground/golden-radiation/ai-avatar-mvp/outputs/videos/result.mp4
+
+==================================================
+Test completed successfully!

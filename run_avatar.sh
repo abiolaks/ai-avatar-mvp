@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Configuration
-OLLAMA_MODEL="llama3"
+OLLAMA_MODEL="qwen3:0.6b"
 
 echo "🚀 Starting AI Avatar MVP..."
 

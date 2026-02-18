@@ -1,67 +1,152 @@
-# AI Avatar MVP with LMS Integration
+# AI Avatar MVP
 
-A minimalist AI Avatar pipeline that listens to user speech, thinks using a local LLM (Ollama), speaks using offline TTS, and (optionally) animates using MuseTalk.
+A minimalist, modular AI Avatar pipeline MVP featuring Speech-to-Text, LLM-powered career counseling, Text-to-Speech, and optional lip-sync video generation with SadTalker.
 
-It features an LMS Integration that recommends courses based on user goals, skills, and career path.
+## Features
+
+- **Speech-to-Text (STT)**: Faster-Whisper for accurate transcription
+- **LLM Reasoning**: Ollama-powered career counseling with course recommendations
+- **Text-to-Speech (TTS)**: Cross-platform TTS (macOS `say` + Linux gTTS)
+- **Avatar (Optional)**: SadTalker lip-sync integration for M2 Mac and Linux
+- **Course Database**: 20+ curated courses across tech, leadership, sales, and personal development
+
+## Architecture
+
+```
+┌─────────────┐   ┌─────────────┐   ┌─────────────┐   ┌─────────────┐
+│  Listener   │──▶│   Thinker   │──▶│   Speaker   │──▶│   Avatar    │
+│  (Whisper)  │   │   (Ollama)  │   │  (gTTS/say) │   │ (SadTalker) │
+└─────────────┘   └─────────────┘   └─────────────┘   └─────────────┘
+```
 
 ## Prerequisites
 
-1.  **Python 3.10+**
-2.  **Ollama** (Running locally)
-    -   Install from [ollama.com](https://ollama.com/)
-    -   Pull the model: `ollama pull llama3`
-3.  **System Dependencies** (for Audio/Video):
-    -   FFmpeg
-    -   PortAudio (Optional on macOS if using `sounddevice` wheel; Linux may require `sudo apt-get install portaudio19-dev`)
+### Core Requirements
+- Python 3.9+
+- FFmpeg
+- Ollama (with qwen3:0.6b model)
+- PortAudio (for audio recording)
 
-## Installation
+### For SadTalker (Optional)
+- **Mac**: M1/M2 Apple Silicon
+- **Linux**: NVIDIA GPU (optional, CPU works but slower)
+- ~5GB disk space for models
 
-1.  Create a virtual environment:
-    ```bash
-    python3 -m venv venv
-    source venv/bin/activate
-    ```
-2.  Install dependencies:
-    ```bash
-    pip install -r requirements.txt
-    ```
+## Quick Start
 
-## MuseTalk Setup (Avatar Animation)
+### 1. Install Dependencies
 
-To enable real-time lip-sync, you must install **MuseTalk**.
-The project attempts to use a cloned repository in `musetalk_repo`.
-
-1.  Clone MuseTalk inside the project root:
-    ```bash
-    git clone https://github.com/TMElyralab/MuseTalk.git musetalk_repo
-    ```
-2.  Follow MuseTalk's installation guide to download pre-trained weights.
-3.  If MuseTalk is not found or configured, the Avatar will run in **MOCK** mode (printing status only).
-
-## Usage
-
-Run the start script:
 ```bash
-./run_avatar.sh
+# Install system dependencies
+# macOS:
+brew install portaudio ffmpeg
+
+# Linux:
+sudo apt-get install portaudio19-dev ffmpeg
+
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Install and run Ollama
+ollama pull qwen3:0.6b
 ```
 
-Or run manually:
+### 2. Run the Avatar (Audio-Only Mode)
+
 ```bash
 python main.py
 ```
 
-## Features
+The system will run in audio-only mode by default. SadTalker is disabled until you set it up.
 
--   **Listener**: Captures microphone input and transcribes using `faster-whisper`.
--   **Thinker**: Uses `llama3` to converse and extract user parameters (Goal, Level, Skills, Career).
--   **LMS Interface**: Recommends courses based on extracted parameters.
--   **Speaker**: Synthesizes speech using `pyttsx3` (Offline).
--   **Avatar**: Wraps MuseTalk for video generation (or falls back to mock).
+### 3. Enable SadTalker (Optional)
 
-## Deployment (Docker)
+To enable lip-sync video generation:
 
-To build and run in Docker (Note: Audio device forwarding is complex in Docker):
+```bash
+# Run setup script (Mac or Linux)
+./setup_sadtalker.sh
+
+# Enable in config
+# Edit sadtalker_config.yaml and set: enabled: true
+
+# Run again
+python main.py
+```
+
+## Configuration
+
+###SadTalker Configuration (`sadtalker_config.yaml`)
+
+```yaml
+enabled: false  # Set to true after setup
+source_image: resources/IMG_20240708_092636.jpg
+bbox_shift: 0   # Adjust mouth openness
+device: auto    # auto-detect: cuda/mps/cpu
+```
+
+## Docker Deployment
+
+### Build
+
 ```bash
 docker build -t ai-avatar .
-# Running with audio device access requires flags like --device /dev/snd (Linux)
 ```
+
+### Run
+
+```bash
+# Audio-only mode (no SadTalker)
+docker run -it --rm ai-avatar
+
+# With SadTalker (mount sadtalker_repo)
+docker run -it --rm \
+  -v ./sadtalker_repo:/app/sadtalker_repo \
+  -v ./outputs:/app/outputs \
+  ai-avatar
+```
+
+## Project Structure
+
+```
+ai-avatar-mvp/
+├── core/
+│   ├── listener.py    # STT with Faster-Whisper
+│   ├── thinker.py     # LLM reasoning with Ollama
+│   ├── speaker.py     # Cross-platform TTS
+│   ├── avatar.py      # SadTalker integration
+│   └── lms_interface.py  # Course database
+├── resources/
+│   └── IMG_20240708_092636.jpg  # User avatar image
+├── outputs/
+│   └── videos/         # Generated lip-sync videos
+├── setup_sadtalker.sh  # SadTalker installation script
+├── sadtalker_config.yaml
+├── requirements.txt
+├── Dockerfile
+└── main.py
+```
+
+## Development Notes
+
+- **TTS**: Uses macOS `say` on Mac, gTTS on Linux
+- **SadTalker**: Auto-detects MPS (Mac), CUDA (Linux GPU), or CPU
+- **MOCK Mode**: Avatar falls back to MOCK if SadTalker unavailable
+- **Model**: Uses qwen3:0.6b for fastest inference
+
+## Troubleshooting
+
+### "gTTS not found" on Linux
+```bash
+pip install gTTS
+```
+
+### "SadTalker repo not found"
+Run `./setup_sadtalker.sh` to install
+
+### Docker TTS silent
+Docker runs headless - audio is saved to files, not played
+
+## License
+
+MIT

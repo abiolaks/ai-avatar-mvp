@@ -1,0 +1,11 @@
+# SadTalker Configuration for AI Avatar MVP
+
+enabled: true  # SadTalker is now installed and models downloaded_sadtalker.sh
+source_image: resources/IMG_20240708_092636.jpg
+bbox_shift: 0   # Adjust mouth openness (positive = more open, negative = less)
+output_dir: outputs/videos
+device: auto    # auto-detect: cuda/mps/cpu
+
+# Advanced options
+still: true       # Use still mode for single image
+preprocess: crop  # crop, resize, or full

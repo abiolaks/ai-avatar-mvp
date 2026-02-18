@@ -19,15 +19,10 @@ def main():
         listener = Listener(model_size="tiny") # Use 'base' or 'small' for better accuracy
         thinker = Thinker() # Use internal default model (qwen3:0.6b)
         speaker = Speaker()
-        avatar = Avatar(musetalk_path="musetalk_repo")
+        avatar = Avatar()  # Uses SadTalker (config in sadtalker_config.yaml)
         
-        # Placeholder image for avatar (user needs to provide this)
-        avatar_image = "resources/avatar.png"
-        if not os.path.exists(avatar_image):
-             logger.warning(f"Avatar image not found at {avatar_image}. Using MOCK mode.")
-             # Create a dummy file to avoid errors in mock mode
-             os.makedirs("resources", exist_ok=True)
-             with open(avatar_image, "w") as f: f.write("dummy")
+        # Avatar image is configured in sadtalker_config.yaml
+        # Default: resources/IMG_20240708_092636.jpg
 
     except Exception as e:
         logger.error(f"Initialization failed: {e}")

@@ -3,6 +3,7 @@ numpy
 scipy
 faster-whisper
 ollama
+httpx
 pyttsx3
 opencv-python
 torch
@@ -11,3 +12,6 @@ torchvision
 ffmpeg-python
 requests
 moviepy
+gTTS  # Cross-platform Text-to-Speech
+PyYAML  # Configuration file support
+imageio-ffmpeg  # Bundled FFmpeg binaries (no Homebrew needed)
